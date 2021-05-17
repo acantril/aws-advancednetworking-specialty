@@ -1,0 +1,725 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "A4L Base VPC Template"
+Parameters:
+  VPCCIDR: 
+    Type: "String"
+    Description: "IP Address range for the VPC"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.0.0/16"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  RESERVEDACIDR: 
+    Type: "String"
+    Description: "IP Address range for A4L-SN-Reserved-A Subnet"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.0.0/20"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  DBACIDR: 
+    Type: "String"
+    Description: "IP Address range for A4L-SN-DB-A Subnet"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.16.0/20"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  PRIVACIDR: 
+    Type: "String"
+    Description: "IP Address range for A4L-SN-PRIV-A Subnet"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.32.0/20"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  PUBACIDR: 
+    Type: "String"
+    Description: "IP Address range for A4L-SN-PUB-A Subnet"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.48.0/20"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  RESERVEDBCIDR: 
+    Type: "String"
+    Description: "IP Address range for A4L-SN-Reserved-B Subnet"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.64.0/20"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  DBBCIDR: 
+    Type: "String"
+    Description: "IP Address range for A4L-SN-DB-B Subnet"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.80.0/20"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  PRIVBCIDR: 
+    Type: "String"
+    Description: "IP Address range for A4L-SN-PRIV-A Subnet"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.96.0/20"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  PUBBCIDR: 
+    Type: "String"
+    Description: "IP Address range for A4L-SN-PUB-A Subnet"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.112.0/20"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  RESERVEDCCIDR: 
+    Type: "String"
+    Description: "IP Address range for A4L-SN-Reserved-C Subnet"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.128.0/20"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  DBCCIDR: 
+    Type: "String"
+    Description: "IP Address range for A4L-SN-DB-C Subnet"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.144.0/20"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  PRIVCCIDR: 
+    Type: "String"
+    Description: "IP Address range for A4L-SN-PRIV-C Subnet"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.160.0/20"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  PUBCCIDR: 
+    Type: "String"
+    Description: "IP Address range for A4L-SN-PUB-C Subnet"
+    MinLength: "9"
+    MaxLength: "18"
+    Default: "10.16.176.0/20"
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: "must be a valid IP CIDR range of the form x.x.x.x/x."
+  PublicVPC:
+    Type: "String"
+    Description: "Create a Public VPC? Public Subnets and IGW"
+    AllowedValues:
+      - true
+      - false
+    Default: true
+  AddSSMEndpoints:
+    Type: "String"
+    Description: "Create SSM Endpoints for public and private instance management"
+    AllowedValues:
+      - true
+      - false
+    Default: true
+  EnableIPv6:
+    Type: "String"
+    Description: "Enable IPv6 on the VPC and subnets"
+    AllowedValues:
+      - true
+      - false
+    Default: true
+Metadata: 
+  AWS::CloudFormation::Interface: 
+    ParameterGroups:
+      - 
+        Label:
+          default: "VPC Configuration"
+        Parameters:
+          - VPCCIDR
+      - 
+        Label:
+          default: "AZA"
+        Parameters:
+          - RESERVEDACIDR
+          - DBACIDR
+          - PRIVACIDR
+          - PUBACIDR
+      - 
+        Label:
+          default: "AZB"
+        Parameters:
+          - RESERVEDBCIDR
+          - DBBCIDR
+          - PRIVBCIDR
+          - PUBBCIDR
+      - 
+        Label:
+          default: "AZC"
+        Parameters:
+          - RESERVEDCCIDR
+          - DBCCIDR
+          - PRIVCCIDR
+          - PUBCCIDR
+Conditions:
+  EnableIPv6: !Equals
+    - !Ref EnableIPv6
+    - true
+  CreatePublicVPC: !Equals 
+    - !Ref PublicVPC
+    - true
+  CreateSSMEndpoints: !Equals 
+    - !Ref AddSSMEndpoints
+    - true
+Resources:
+  VPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      CidrBlock: !Ref VPCCIDR
+      Tags:
+        - Key: "Name"
+          Value: !Sub "${AWS::StackName}-VPC"
+  IPv6CidrBlock:
+    Type: AWS::EC2::VPCCidrBlock
+    Properties:
+      VpcId: !Ref VPC
+      AmazonProvidedIpv6CidrBlock: true
+  IGW:
+    Type: AWS::EC2::InternetGateway
+    Condition: CreatePublicVPC
+    Properties:
+      Tags:
+      - Key: "Name"
+        Value: !Sub "${AWS::StackName}-IGW"
+  IGWAttachments:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Condition: CreatePublicVPC
+    Properties: 
+      InternetGatewayId: !Ref IGW
+      VpcId: !Ref VPC
+  SubnetReservedA:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      CidrBlock: !Ref RESERVEDACIDR
+      AssignIpv6AddressOnCreation: !If [EnableIPv6, true, !Ref AWS::NoValue]
+      Ipv6CidrBlock: 
+        Fn::If:
+          - EnableIPv6          
+          - Fn::Sub:
+              - "${VpcPart}${SubnetPart}"
+              - SubnetPart: '00::/64'
+                VpcPart: !Select [ 0, !Split [ '00::/56', !Select [ 0, !GetAtt VPC.Ipv6CidrBlocks ]]]
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-SN-Reserved-A"
+  SubnetDBA:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      CidrBlock: !Ref DBACIDR
+      AssignIpv6AddressOnCreation: !If [EnableIPv6, true, !Ref AWS::NoValue]
+      Ipv6CidrBlock: 
+        Fn::If:
+          - EnableIPv6          
+          - Fn::Sub:
+              - "${VpcPart}${SubnetPart}"
+              - SubnetPart: '01::/64'
+                VpcPart: !Select [ 0, !Split [ '00::/56', !Select [ 0, !GetAtt VPC.Ipv6CidrBlocks ]]]
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-SN-DB-A"
+  SubnetPrivA:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      CidrBlock: !Ref PRIVACIDR
+      AssignIpv6AddressOnCreation: !If [EnableIPv6, true, !Ref AWS::NoValue]
+      Ipv6CidrBlock: 
+        Fn::If:
+          - EnableIPv6          
+          - Fn::Sub:
+              - "${VpcPart}${SubnetPart}"
+              - SubnetPart: '02::/64'
+                VpcPart: !Select [ 0, !Split [ '00::/56', !Select [ 0, !GetAtt VPC.Ipv6CidrBlocks ]]]
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-SN-PRIV-A"
+  SubnetPubA:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      VpcId: !Ref VPC
+      MapPublicIpOnLaunch: !If [CreatePublicVPC, true, false]
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      CidrBlock: !Ref PUBACIDR
+      Ipv6CidrBlock: 
+        Fn::If:
+          - EnableIPv6          
+          - Fn::Sub:
+              - "${VpcPart}${SubnetPart}"
+              - SubnetPart: '03::/64'
+                VpcPart: !Select [ 0, !Split [ '00::/56', !Select [ 0, !GetAtt VPC.Ipv6CidrBlocks ]]]
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-SN-PUB-A"
+  SubnetReservedB:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      CidrBlock: !Ref RESERVEDBCIDR
+      AssignIpv6AddressOnCreation: !If [EnableIPv6, true, !Ref AWS::NoValue]
+      Ipv6CidrBlock: 
+        Fn::If:
+          - EnableIPv6          
+          - Fn::Sub:
+              - "${VpcPart}${SubnetPart}"
+              - SubnetPart: '04::/64'
+                VpcPart: !Select [ 0, !Split [ '00::/56', !Select [ 0, !GetAtt VPC.Ipv6CidrBlocks ]]]
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-SN-Reserved-B"
+  SubnetDBB:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      CidrBlock: !Ref DBBCIDR
+      AssignIpv6AddressOnCreation: !If [EnableIPv6, true, !Ref AWS::NoValue]
+      Ipv6CidrBlock: 
+        Fn::If:
+          - EnableIPv6          
+          - Fn::Sub:
+              - "${VpcPart}${SubnetPart}"
+              - SubnetPart: '05::/64'
+                VpcPart: !Select [ 0, !Split [ '00::/56', !Select [ 0, !GetAtt VPC.Ipv6CidrBlocks ]]]
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-SN-DB-B"
+  SubnetPrivB:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      CidrBlock: !Ref PRIVBCIDR
+      AssignIpv6AddressOnCreation: !If [EnableIPv6, true, !Ref AWS::NoValue]
+      Ipv6CidrBlock: 
+        Fn::If:
+          - EnableIPv6          
+          - Fn::Sub:
+              - "${VpcPart}${SubnetPart}"
+              - SubnetPart: '06::/64'
+                VpcPart: !Select [ 0, !Split [ '00::/56', !Select [ 0, !GetAtt VPC.Ipv6CidrBlocks ]]]
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-SN-PRIV-B"
+  SubnetPubB:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      MapPublicIpOnLaunch: !If [CreatePublicVPC, true, false]
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      CidrBlock: !Ref PUBBCIDR
+      Ipv6CidrBlock: 
+        Fn::If:
+          - EnableIPv6          
+          - Fn::Sub:
+              - "${VpcPart}${SubnetPart}"
+              - SubnetPart: '07::/64'
+                VpcPart: !Select [ 0, !Split [ '00::/56', !Select [ 0, !GetAtt VPC.Ipv6CidrBlocks ]]]
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-SN-PUB-B"
+  SubnetReservedC:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 2, !GetAZs '' ]
+      CidrBlock: !Ref RESERVEDCCIDR
+      AssignIpv6AddressOnCreation: !If [EnableIPv6, true, !Ref AWS::NoValue]
+      Ipv6CidrBlock: 
+        Fn::If:
+          - EnableIPv6          
+          - Fn::Sub:
+              - "${VpcPart}${SubnetPart}"
+              - SubnetPart: '08::/64'
+                VpcPart: !Select [ 0, !Split [ '00::/56', !Select [ 0, !GetAtt VPC.Ipv6CidrBlocks ]]]
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-SN-Reserved-C"
+  SubnetDBC:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 2, !GetAZs '' ]
+      CidrBlock: !Ref DBCCIDR
+      AssignIpv6AddressOnCreation: !If [EnableIPv6, true, !Ref AWS::NoValue]
+      Ipv6CidrBlock: 
+        Fn::If:
+          - EnableIPv6          
+          - Fn::Sub:
+              - "${VpcPart}${SubnetPart}"
+              - SubnetPart: '09::/64'
+                VpcPart: !Select [ 0, !Split [ '00::/56', !Select [ 0, !GetAtt VPC.Ipv6CidrBlocks ]]]
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-SN-DB-C"
+  SubnetPrivC:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 2, !GetAZs '' ]
+      CidrBlock: !Ref PRIVCCIDR
+      AssignIpv6AddressOnCreation: !If [EnableIPv6, true, !Ref AWS::NoValue]
+      Ipv6CidrBlock: 
+        Fn::If:
+          - EnableIPv6          
+          - Fn::Sub:
+              - "${VpcPart}${SubnetPart}"
+              - SubnetPart: '0A::/64'
+                VpcPart: !Select [ 0, !Split [ '00::/56', !Select [ 0, !GetAtt VPC.Ipv6CidrBlocks ]]]
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-SN-PRIV-C"
+  SubnetPubC:
+    Type: AWS::EC2::Subnet
+    DependsOn: IPv6CidrBlock
+    Properties:
+      MapPublicIpOnLaunch: !If [CreatePublicVPC, true, false]
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 2, !GetAZs '' ]
+      CidrBlock: !Ref PUBCCIDR
+      Ipv6CidrBlock: 
+        Fn::If:
+          - EnableIPv6          
+          - Fn::Sub:
+              - "${VpcPart}${SubnetPart}"
+              - SubnetPart: '0B::/64'
+                VpcPart: !Select [ 0, !Split [ '00::/56', !Select [ 0, !GetAtt VPC.Ipv6CidrBlocks ]]]
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-SN-PUB-C"
+  IPv6WorkaroundSubnetPUBA:
+    Type: Custom::SubnetModify
+    Properties:
+      ServiceToken: !GetAtt IPv6WorkaroundLambda.Arn
+      SubnetId: !Ref SubnetPubA
+  IPv6WorkaroundSubnetPUBB:
+    Type: Custom::SubnetModify
+    Properties:
+      ServiceToken: !GetAtt IPv6WorkaroundLambda.Arn
+      SubnetId: !Ref SubnetPubB
+  IPv6WorkaroundSubnetPUBC:
+    Type: Custom::SubnetModify
+    Properties:
+      ServiceToken: !GetAtt IPv6WorkaroundLambda.Arn
+      SubnetId: !Ref SubnetPubC
+  IPv6WorkaroundRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: !Sub "ipv6-fix-logs-${AWS::StackName}"
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+              Resource: arn:aws:logs:*:*:*
+        - PolicyName: !Sub "ipv6-fix-modify-${AWS::StackName}"
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - ec2:ModifySubnetAttribute
+              Resource: "*"
+  IPv6WorkaroundLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: "index.lambda_handler"
+      Code: #import cfnresponse below required to send respose back to CFN
+        ZipFile:
+          Fn::Sub: |
+            import cfnresponse
+            import boto3
+
+            def lambda_handler(event, context):
+                if event['RequestType'] is 'Delete':
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS)
+                  return
+
+                responseValue = event['ResourceProperties']['SubnetId']
+                ec2 = boto3.client('ec2', region_name='${AWS::Region}')
+                ec2.modify_subnet_attribute(AssignIpv6AddressOnCreation={
+                                                'Value': True
+                                              },
+                                              SubnetId=responseValue)
+                responseData = {}
+                responseData['SubnetId'] = responseValue
+                cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, "CustomResourcePhysicalID")
+      Runtime: python3.6
+      Role: !GetAtt IPv6WorkaroundRole.Arn
+      Timeout: 30
+  RTRESERVEDA: 
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-RT-Reserved-A"
+  RTDBA: 
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-RT-DB-A"
+  RTPRIVA: 
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-RT-PRIV-A"
+  RTPUBA: 
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-RT-PUB-A"
+  RTRESERVEDB: 
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-RT-Reserved-B"
+  RTDBB: 
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-RT-DB-B"
+  RTPRIVB: 
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-RT-PRIV-B"
+  RTPUBB: 
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-RT-PUB-B"
+  RTRESERVEDC: 
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-RT-Reserved-C"
+  RTDBC: 
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-RT-DB-C"
+  RTPRIVC: 
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-RT-PRIV-C"
+  RTPUBC: 
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-RT-PUB-C"
+  RoutePUBA:
+    Type : AWS::EC2::Route
+    Condition: CreatePublicVPC
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGW
+      RouteTableId: !Ref RTPUBA
+  RoutePUBB:
+    Type : AWS::EC2::Route
+    Condition: CreatePublicVPC
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGW
+      RouteTableId: !Ref RTPUBB
+  RoutePUBC:
+    Type : AWS::EC2::Route
+    Condition: CreatePublicVPC
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGW
+      RouteTableId: !Ref RTPUBC
+  RTAssociationRESERVEDA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetReservedA
+      RouteTableId: !Ref RTRESERVEDA
+  RTAssociationDBA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetDBA
+      RouteTableId: !Ref RTDBA
+  RTAssociationPRIVA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetPrivA
+      RouteTableId: !Ref RTPRIVA
+  RTAssociationPUBA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetPubA
+      RouteTableId: !Ref RTPUBA
+  RTAssociationRESERVEDB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetReservedB
+      RouteTableId: !Ref RTRESERVEDB
+  RTAssociationDBB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetDBB
+      RouteTableId: !Ref RTDBB
+  RTAssociationPRIVB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetPrivB
+      RouteTableId: !Ref RTPRIVB
+  RTAssociationPUBB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetPubB
+      RouteTableId: !Ref RTPUBB
+  RTAssociationRESERVEDC:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetReservedC
+      RouteTableId: !Ref RTRESERVEDC
+  RTAssociationDBC:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetDBC
+      RouteTableId: !Ref RTDBC
+  RTAssociationPRIVC:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetPrivC
+      RouteTableId: !Ref RTPRIVC
+  RTAssociationPUBC:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetPubC
+      RouteTableId: !Ref RTPUBC
+  ssminterfaceendpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Condition: CreateSSMEndpoints
+    Properties:
+      VpcEndpointType: "Interface"
+      PrivateDnsEnabled: "True"
+      SubnetIds:
+        - !Ref SubnetPrivA
+        - !Ref SubnetPrivB
+        - !Ref SubnetPrivC
+      SecurityGroupIds:
+        - !Ref GeneralSG
+      ServiceName: !Sub com.amazonaws.${AWS::Region}.ssm
+      VpcId: !Ref VPC
+  ssmec2messagesinterfaceendpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Condition: CreateSSMEndpoints
+    Properties:
+      VpcEndpointType: "Interface"
+      PrivateDnsEnabled: "True"
+      SubnetIds:
+        - !Ref SubnetPrivA
+        - !Ref SubnetPrivB
+        - !Ref SubnetPrivC
+      SecurityGroupIds:
+        - !Ref GeneralSG
+      ServiceName: !Sub com.amazonaws.${AWS::Region}.ec2messages
+      VpcId: !Ref VPC
+  ssmmessagesinterfaceendpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Condition: CreateSSMEndpoints
+    Properties:
+      VpcEndpointType: "Interface"
+      PrivateDnsEnabled: "True"
+      SubnetIds:
+        - !Ref SubnetPrivA
+        - !Ref SubnetPrivB
+        - !Ref SubnetPrivC
+      SecurityGroupIds:
+        - !Ref GeneralSG
+      ServiceName: !Sub com.amazonaws.${AWS::Region}.ssmmessages
+      VpcId: !Ref VPC
+  GeneralSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Default A4L AWS SG
+      SecurityGroupIngress: 
+        - Description: 'Allow SSH IPv4 IN'
+          IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: '0.0.0.0/0'
+  GeneralSGSelfReferenceRule:
+    Type: "AWS::EC2::SecurityGroupIngress"
+    Properties:
+      GroupId: !Ref GeneralSG
+      IpProtocol: '-1'
+      SourceSecurityGroupId: !Ref GeneralSG
+
