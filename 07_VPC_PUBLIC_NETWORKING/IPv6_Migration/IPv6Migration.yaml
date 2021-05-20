@@ -697,6 +697,21 @@ Resources:
       Tags:
         - Key: Name
           Value: A4L-IPv4PublicEC2
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum -y update
+          yum install -y httpd wget git
+          cd /tmp
+          git clone https://github.com/acantril/aws-advancednetworking-specialty.git
+          cp ./aws-advancednetworking-specialty/04_VPC/IPv6_Migration/website/* /var/www/html
+          usermod -a -G apache ec2-user   
+          chown -R ec2-user:apache /var/www
+          chmod 2775 /var/www
+          find /var/www -type d -exec chmod 2775 {} \;
+          find /var/www -type f -exec chmod 0664 {} \;
+          systemctl enable httpd
+          systemctl start httpd
   IPv4PrivateEC2:
     Type: AWS::EC2::Instance
     Properties:
