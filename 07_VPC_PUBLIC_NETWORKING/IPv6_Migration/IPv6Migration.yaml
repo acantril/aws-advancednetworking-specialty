@@ -118,7 +118,7 @@ Parameters:
   Ubuntu16AmiId:
     Description: Ubuntu 16 AMI for any EC2 Instances (if applicable)
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/canonical/ubuntu/server-minimal/16.04/stable/20210430/amd64/hvm/ebs-gp2/ami-id'
+    Default: '/aws/service/canonical/ubuntu/server/16.04/stable/20210429/arm64/hvm/ebs-gp2/ami-id'
 Metadata: 
   AWS::CloudFormation::Interface: 
     ParameterGroups:
@@ -704,7 +704,7 @@ Resources:
           yum install -y httpd wget git
           cd /tmp
           git clone https://github.com/acantril/aws-advancednetworking-specialty.git
-          cp ./aws-advancednetworking-specialty/04_VPC/IPv6_Migration/website/* /var/www/html
+          cp ./aws-advancednetworking-specialty/07_VPC_PUBLIC_NETWORKING/IPv6_Migration/website/* /var/www/html
           usermod -a -G apache ec2-user   
           chown -R ec2-user:apache /var/www
           chmod 2775 /var/www
